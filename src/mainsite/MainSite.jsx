@@ -6,8 +6,7 @@ import cat3 from './assets/cat3.png';
 import cat4 from './assets/cat4.png';
 import logo from './assets/cat_logo.svg';
 
-const CatLoversClub = () => {
-    // Храним ID карточки, на которую навели мышку
+const MainSite = () => {
     const [activeCard, setActiveCard] = useState(null);
 
     const competitions = [
@@ -70,4 +69,4 @@ const CatLoversClub = () => {
     );
 };
 
-export default CatLoversClub;
+export default MainSite;
