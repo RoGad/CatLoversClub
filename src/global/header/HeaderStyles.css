@@ -26,6 +26,7 @@
 .nav-links a {
     color: #4a5568;
     text-decoration: none;
+    transition: color 0.2s ease;
 }
 
 .nav-links a:hover {
@@ -51,7 +52,7 @@
 
 .signup-btn:hover, .login-btn:hover {
     transform: translateX(-10px) translateY(-5px);
-    box-shadow: 5px 5px 8px rgba(0, 0, 0, 0.5);
+    box-shadow: 5px 5px 8px rgba(0, 0, 0, 0.25);
 }
 
 .signup-btn {

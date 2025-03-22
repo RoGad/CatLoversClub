@@ -1,20 +1,20 @@
-import "./SignUpStyles.css"
+import "./AuthStyles.css"
 import React from "react";
 
 
 const SignUp = () => {
 
     return(
-        <div className="login-page-wrapper">
-            <h1 className="login-text">Регистрация</h1>
-            <div className="login-form-container">
+        <div className="auth-page-wrapper">
+            <h1 className="auth-text">Регистрация</h1>
+            <div className="auth-form-container">
                 <form>
-                    <input type="text" className="login-input" placeholder="Логин или почта"/>
-                    <input type="password" className="login-input" placeholder="Пароль"/>
-                    <input type="password" className="login-input" placeholder="Пароль"/>
-                    <input type="password" className="login-input" placeholder="Пароль"/>
-                    <button type="submit" className="login-button">Продолжить</button>
-                    <div className="login-divider"></div>
+                    <input type="text" className="auth-input" placeholder="Логин"/>
+                    <input type="email" className="auth-input" placeholder="Почта"/>
+                    <input type="password" className="auth-input" placeholder="Пароль"/>
+                    <input type="password" className="auth-input" placeholder="Повторите пароль"/>
+                    <button type="submit" className="auth-button">Продолжить</button>
+                    <div className="auth-divider"></div>
                     <div className="x-icon">
                         <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
                             <path

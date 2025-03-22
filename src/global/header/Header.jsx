@@ -1,5 +1,5 @@
 import "./HeaderStyles.css"
-import logo from "../assets/cat_logo.svg";
+import logo from "../../assets/cat_logo.svg";
 import React from "react";
 import {Link} from "react-router-dom";
 
@@ -14,10 +14,11 @@ const Header = () => {
             <div className="nav-links">
                 <Link to="/breeds">Список пород</Link>
                 <Link to="/">Главная</Link>
+                <Link to="/">Наши кошки</Link>
             </div>
             <div className="auth-buttons">
-                <Link to="/login" className="login-btn">Log In</Link>
-                <Link to="/signup" className="signup-btn">Sign Up</Link>
+                <Link to="/Login" className="login-btn">Log In</Link>
+                <Link to="/Signup" className="signup-btn">Sign Up</Link>
             </div>
         </header>
     );
