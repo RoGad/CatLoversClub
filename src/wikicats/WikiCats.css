@@ -1,0 +1,69 @@
+.wiki-cats-grid {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+    padding: 16px;
+    max-width: 1200px;
+    margin: 0 auto;
+}
+
+.wiki-cats-row {
+    display: flex;
+    gap: 16px;
+}
+
+.wiki-cat-card {
+    flex: 1;
+    background-color: #48bb78;
+    border-radius: 8px;
+    overflow: hidden;
+    box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+    cursor: pointer;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.wiki-cat-card:hover {
+    transform: scale(1.05);
+    box-shadow: 0 6px 12px rgba(0,0,0,0.15);
+}
+
+.wiki-cat-card img {
+    width: 100%;
+    height: 300px;
+    object-fit: cover;
+}
+
+.wiki-cat-card .card-info {
+    padding: 12px;
+    color: white;
+    text-align: center;
+}
+
+.wiki-cat-card .breed {
+    font-weight: bold;
+    margin-bottom: 4px;
+}
+
+.wiki-cat-card .description {
+    font-size: 0.9em;
+}
+
+@media screen and (max-width: 760px) {
+    .wiki-cats-grid {
+        padding: 8px;
+    }
+
+    .wiki-cats-row {
+        flex-direction: column;
+        gap: 8px;
+    }
+
+    .wiki-cat-card {
+        width: 100%;
+        max-width: 100%;
+    }
+
+    .wiki-cat-card img {
+        height: 200px;
+    }
+}

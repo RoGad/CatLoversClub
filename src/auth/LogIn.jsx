@@ -23,7 +23,6 @@ const LogIn = () => {
                 </form>
             </div>
         </div>
-
     );
 };
 

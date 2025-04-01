@@ -1,0 +1,237 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: Arial, sans-serif;
+}
+
+body {
+    background-color: #fafafa;
+}
+
+/* Header Styles */
+.header {
+    width: 100%;
+    height: 60px;
+    background-color: #fff;
+    border-bottom: 1px solid #e0e0e0;
+    position: fixed;
+    top: 0;
+    left: 0;
+    z-index: 100;
+}
+
+.header-container {
+    max-width: 1200px;
+    margin: 0 auto;
+    height: 100%;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0 20px;
+}
+
+.logo a {
+    display: flex;
+    align-items: center;
+    text-decoration: none;
+    color: #333;
+    font-weight: bold;
+    font-size: 16px;
+}
+
+.logo svg {
+    margin-right: 8px;
+}
+
+.for-figma {
+    font-size: 12px;
+    color: #666;
+    margin-left: 4px;
+    font-weight: normal;
+}
+
+.navigation ul {
+    display: flex;
+    list-style: none;
+}
+
+.navigation li {
+    margin-left: 24px;
+}
+
+.navigation a {
+    text-decoration: none;
+    color: #333;
+    font-size: 14px;
+}
+
+.user-profile {
+    display: flex;
+    align-items: center;
+}
+
+.avatar {
+    width: 30px;
+    height: 30px;
+    border-radius: 50%;
+    overflow: hidden;
+    margin-right: 10px;
+}
+
+.avatar img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.username {
+    font-size: 14px;
+    color: #333;
+}
+
+/* Main Content Styles */
+.main-content {
+    margin-top: 60px;
+    padding: 40px 20px;
+}
+
+.profile-container {
+    max-width: 1200px;
+    margin: 0 auto;
+    display: flex;
+    flex-wrap: wrap;
+}
+
+/* User Info Styles */
+.user-info {
+    width: 320px;
+    margin-right: 40px;
+    margin-bottom: 30px;
+}
+
+.user-image {
+    width: 100%;
+    margin-bottom: 15px;
+    overflow: hidden;
+}
+
+.user-image img {
+    width: 100%;
+    height: auto;
+    object-fit: cover;
+}
+
+.user-name {
+    font-size: 22px;
+    font-weight: 600;
+    text-align: center;
+    margin-top: 10px;
+}
+
+/* Cat Content Styles */
+.cat-content {
+    flex: 1;
+    min-width: 0;
+}
+
+.cat-section {
+    margin-bottom: 60px;
+}
+
+.section-title {
+    font-size: 28px;
+    font-weight: bold;
+    margin-bottom: 30px;
+}
+
+.card-container {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 20px;
+}
+
+.cat-card {
+    flex: 1;
+    background-color: #48bb78;
+    border-radius: 8px;
+    overflow: hidden;
+    box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+    cursor: pointer;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.cat-card:hover {
+    transform: scale(1.05);
+    box-shadow: 0 6px 12px rgba(0,0,0,0.15);
+}
+
+.card-image {
+    width: 100%;
+    height: 200px;
+    overflow: hidden;
+}
+
+.card-image img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.card-info {
+    padding: 15px;
+    background-color: #4CAF50;
+    color: white;
+}
+
+.breed-name {
+    font-size: 18px;
+    font-weight: 600;
+    margin-bottom: 8px;
+}
+
+.breed-description {
+    font-size: 14px;
+    line-height: 1.4;
+}
+
+/* Responsive Styles */
+@media (max-width: 1024px) {
+    .cat-card {
+        width: calc(50% - 10px);
+    }
+}
+
+@media (max-width: 768px) {
+    .profile-container {
+        flex-direction: column;
+    }
+
+    .user-info {
+        width: 100%;
+        max-width: 320px;
+        margin: 0 auto 40px;
+    }
+
+    .cat-content {
+        width: 100%;
+    }
+}
+
+@media (max-width: 576px) {
+    .card-container {
+        flex-direction: column;
+    }
+
+    .cat-card {
+        width: 100%;
+    }
+
+    .navigation ul {
+        display: none;
+    }
+
+    .header-container {
+        justify-content: space-between;
+    }
+}

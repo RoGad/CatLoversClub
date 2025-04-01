@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import './MainSiteStyles.css';
 import cat1 from '../assets/cat1.png';
 import cat2 from '../assets/cat2.png';
@@ -7,13 +8,18 @@ import cat4 from '../assets/cat4.png';
 
 const MainSite = () => {
     const [activeCard, setActiveCard] = useState(null);
+    const navigate = useNavigate();
 
     const competitions = [
-        { id: 1, image: cat1, title: "Конкурс", description: "Очень классная порода, прям супер" },
-        { id: 2, image: cat2, title: "Конкурс", description: "Очень классная порода, прям супер" },
-        { id: 3, image: cat3, title: "Конкурс", description: "Очень классная порода, прям супер" },
-        { id: 4, image: cat4, title: "Конкурс", description: "Очень классная порода, прям супер" }
+        { id: 1, image: cat1, title: "Конкурс", description: "Очень классная порода, прям супер", link: "/competition/1" },
+        { id: 2, image: cat2, title: "Конкурс", description: "Очень классная порода, прям супер", link: "/competition/2" },
+        { id: 3, image: cat3, title: "Конкурс", description: "Очень классная порода, прям супер", link: "/competition/3" },
+        { id: 4, image: cat4, title: "Конкурс", description: "Очень классная порода, прям супер", link: "/competition/4" }
     ];
+
+    const handleCardClick = (link) => {
+        navigate(link);
+    };
 
     return (
         <div className="container">
@@ -32,6 +38,7 @@ const MainSite = () => {
                         <div
                             key={comp.id}
                             className={`competition-card ${activeCard === comp.id ? 'active' : ''}`}
+                            onClick={() => handleCardClick(comp.link)}
                             onMouseEnter={() => setActiveCard(comp.id)}
                             onMouseLeave={() => setActiveCard(null)}
                         >
