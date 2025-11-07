@@ -1,10 +1,8 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 import "./WikiCats.css";
-import cat11 from "../assets/cat_11.svg"
-import cat22 from "../assets/cat_22.svg"
-import cat33 from "../assets/cat_33.svg"
-import cat44 from "../assets/cat_44.svg"
-import {useNavigate} from "react-router-dom";
+import { useNavigate } from "react-router-dom";
+import { API_BASE_URL, IMAGE_BASE_URL } from 'C:/Users/kroko/PhpstormProjects/untitled1/src/global/config.js';
+import axios from 'axios';
 
 const CatCard = ({ image, breed, description, onClick }) => {
     return (
@@ -23,38 +21,77 @@ const CatCard = ({ image, breed, description, onClick }) => {
 
 const WikiCats = () => {
     const navigate = useNavigate();
+    const [breeds, setBreeds] = useState([]);
+    const [loading, setLoading] = useState(true);
+    const [error, setError] = useState(null);
 
-    const cats = [
-        { image: cat11, breed: 'Очень классная порода', description: 'Прям супер' },
-        { image: cat22, breed: 'Очень классная порода', description: 'Прям супер' },
-        { image: cat33, breed: 'Очень классная порода', description: 'Прям супер' },
-        { image: cat44, breed: 'Очень классная порода', description: 'Прям супер' }
-    ];
+    useEffect(() => {
+        // Fetch breeds from PHP API
+        const fetchBreeds = async () => {
+            try {
+                const response = await axios.get(`${API_BASE_URL}/breeds.php`);
+                if (response.data.success) {
+                    setBreeds(response.data.data);
+                } else {
+                    setError(response.data.message);
+                }
+            } catch (err) {
+                setError('Failed to fetch cat breeds');
+                console.error(err);
+            } finally {
+                setLoading(false);
+            }
+        };
 
-    const handleCardClick = (link) => {
-        navigate(link);
+        fetchBreeds();
+    }, []);
+
+    const handleCardClick = (breedId) => {
+        navigate(`/breed/${breedId}`);
     };
 
-    const grid = [];
-    for (let i = 0; i < 4; i++) {
-        const row = [];
-        for (let j = 0; j < 4; j++) {
-            const catIndex = i * 4 + j;
-            const cat = cats[catIndex % cats.length];
-            row.push(
-                <CatCard
-                    key={`${i}-${j}`}
-                    image={cat.image}
-                    breed={cat.breed}
-                    description={cat.description}
-                    onClick={() => handleCardClick("/InfoCats")}
-                />
-            );
-        }
-        grid.push(<div key={i} className="wiki-cats-row">{row}</div>);
-    }
+    if (loading) return <div className="loading">Loading cat breeds...</div>;
+    if (error) return <div className="error">Error: {error}</div>;
 
-    return <div className="wiki-cats-grid">{grid}</div>;
+    // Create a grid with all breeds
+    const createGrid = () => {
+        const grid = [];
+        const itemsPerRow = 4;
+
+        // Calculate how many rows we need
+        const totalRows = Math.ceil(breeds.length / itemsPerRow);
+
+        for (let i = 0; i < totalRows; i++) {
+            const row = [];
+            for (let j = 0; j < itemsPerRow; j++) {
+                const index = i * itemsPerRow + j;
+                // If we've shown all breeds, repeat from the beginning
+                const realIndex = index % breeds.length;
+                const breed = breeds[realIndex];
+                const getImageUrl = (url) => {
+                    if(url.startsWith("http")) {
+                        return url
+                    }
+                    return `${IMAGE_BASE_URL}${url}`;
+                }
+
+                row.push(
+                    <CatCard
+                        key={`${i}-${j}`}
+                        image={getImageUrl(breed.image_url)}
+                        breed={breed.name}
+                        description={breed.short_description}
+                        onClick={() => handleCardClick(breed.breed_id)}
+                    />
+                );
+            }
+            grid.push(<div key={i} className="wiki-cats-row">{row}</div>);
+        }
+
+        return grid;
+    };
+
+    return <div className="wiki-cats-grid">{createGrid()}</div>;
 };
 
-export default WikiCats
+export default WikiCats;

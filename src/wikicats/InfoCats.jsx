@@ -1,22 +1,61 @@
-import React from "react"
-import "./InfoCats.css"
-import cat11 from "../assets/cat_11.svg"
+import React, { useState, useEffect } from "react";
+import { useParams } from "react-router-dom";
+import { API_BASE_URL, IMAGE_BASE_URL } from "C:/Users/kroko/PhpstormProjects/untitled1/src/global/config.js";
+import "./InfoCats.css";
+import axios from 'axios';
 
 const InfoCats = () => {
-    return(
+    const { id } = useParams(); // Get breed_id from URL parameter
+    const [breed, setBreed] = useState(null);
+    const [loading, setLoading] = useState(true);
+    const [error, setError] = useState(null);
+    const getImageUrl = (url) => {
+        if (url.startsWith("http")) {
+            return url;
+        }
+        return `${IMAGE_BASE_URL}${url}`;
+    };
+
+
+    useEffect(() => {
+        const fetchBreedDetails = async () => {
+            try {
+                const response = await axios.get(`${API_BASE_URL}/breed.php?id=${id}`);
+                if (response.data.success) {
+                    setBreed(response.data.data);
+                } else {
+                    setError(response.data.message);
+                }
+            } catch (err) {
+                setError('Failed to fetch breed details');
+                console.error(err);
+            } finally {
+                setLoading(false);
+            }
+        };
+
+        fetchBreedDetails();
+    }, [id]);
+
+    if (loading) return <div className="loading">Loading breed information...</div>;
+    if (error) return <div className="error">Error: {error}</div>;
+    if (!breed) return <div className="not-found">Breed not found</div>;
+
+    // Split the full description into paragraphs
+    const paragraphs = breed.full_description.split(/\n+/).filter(p => p.trim() !== '');
+
+    return (
         <div className="maine-coon-container">
             <div className="maine-coon-content">
                 <div className="maine-coon-image">
-                    <img src={cat11} alt="Maine Coon Cat" />
+                    <img src={getImageUrl(breed.image_url)} alt={breed.name} />
                 </div>
                 <div className="maine-coon-text">
-                    <h1>Мейн-кун</h1>
+                    <h1>{breed.name}</h1>
                     <div className="description">
-                        <p>Мейн-кун – это величественный гигант кошачьего мира, чья история окутана легендами. Считается, что порода зародилась в суровых лесах штата Мэн, где эти кошки столетиями жили бок о бок с фермерами, защищая урожай от грызунов. Их название часто связывают с мифом о скрещивании с еното – этому способствовал пушистый полосатый хвост и мощное телосложение, но генетика развеивает сказки, подтверждая чистокровное происхождение.</p>
-
-                        <p>Мейн-куны впечатляют своими размерами: взрослые коты могут достигать веса 10-12 кг, а их мускулистое тело, длинные лапы и кисточки на ушах напоминают дикую рысь. Однако за грозной внешностью скрывается невероятно добродушный характер. Эти кошки – прирожденные компаньоны. Они общительны, но ненавязчивы, любят наблюдать за людьми с достоинством «короля горы», а их тихий, мелодичный голосок удивляет тех, кто ожидает услышать рык от столь крупного животного.</p>
-
-                        <p>Особое очарование мейн-кунам придает их шерсть – густая, шелковистая, с водоотталкивающим подшерстком, которая зимой превращает их в пушистые «снежки». Уход заней прост, чем нередко избегают колтунов. Эти кошки обожают игры, легко обучаются приносить мячики и даже гулять на поводке, а их любопытство и интеллект превращают каждый день в маленькое приключение. Мейн-кун станет не просто питомцем, а полноценным членом семьи, который любит в себе даже тех, кто никогда не мечтал о кошке.</p>
+                        {paragraphs.map((paragraph, index) => (
+                            <p key={index}>{paragraph}</p>
+                        ))}
                     </div>
                 </div>
             </div>
@@ -24,4 +63,4 @@ const InfoCats = () => {
     );
 };
 
-export default InfoCats
+export default InfoCats;
