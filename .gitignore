@@ -16,7 +16,6 @@ dist-ssr
 config.js
 config.php
 vercel.json
-src/auth/VkAuth.js
 
 # Editor directories and files
 .vscode/*
