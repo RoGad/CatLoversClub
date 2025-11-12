@@ -1,11 +1,11 @@
 import React, { useState, useEffect } from "react";
 import { useParams } from "react-router-dom";
-import { API_BASE_URL, IMAGE_BASE_URL } from "C:/Users/kroko/PhpstormProjects/untitled1/src/global/config.js";
+import { API_BASE_URL, IMAGE_BASE_URL } from "../global/config.js";
 import "./InfoCats.css";
 import axios from 'axios';
 
 const InfoCats = () => {
-    const { id } = useParams(); // Get breed_id from URL parameter
+    const { id } = useParams();
     const [breed, setBreed] = useState(null);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
@@ -41,7 +41,6 @@ const InfoCats = () => {
     if (error) return <div className="error">Error: {error}</div>;
     if (!breed) return <div className="not-found">Breed not found</div>;
 
-    // Split the full description into paragraphs
     const paragraphs = breed.full_description.split(/\n+/).filter(p => p.trim() !== '');
 
     return (
