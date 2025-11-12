@@ -1,6 +1,7 @@
 import React, { createContext, useContext, useState, useEffect } from 'react';
-import { API_BASE_URL } from './config.js';
+import { API_BASE_URL, VK_APP_ID, VK_REDIRECT_URL } from './config.js';
 import axios from 'axios';
+import { initVKAuth } from '../auth/vkAuth.js';
 
 const AuthContext = createContext(null);
 
@@ -115,6 +116,82 @@ export const AuthProvider = ({ children }) => {
         }
     };
 
+    const loginWithVK = async (vkData) => {
+        try {
+            const response = await axios.post(
+                `${API_BASE_URL}/Auth.php`,
+                {
+                    action: 'vk_login',
+                    vk_user_id: vkData.userId,
+                    access_token: vkData.accessToken,
+                    email: vkData.email,
+                    first_name: vkData.firstName,
+                    last_name: vkData.lastName,
+                    photo: vkData.photo
+                },
+                {
+                    withCredentials: true,
+                    headers: { 'Content-Type': 'application/json' }
+                }
+            );
+
+            if (response.data.success) {
+                setUser(response.data.user);
+                setIsAuthenticated(true);
+                return { success: true, user: response.data.user };
+            } else {
+                return { success: false, message: response.data.message };
+            }
+        } catch (err) {
+            return {
+                success: false,
+                message: err.response?.data?.message || 'VK login failed'
+            };
+        }
+    };
+
+    const registerWithVK = async (vkData) => {
+        try {
+            const response = await axios.post(
+                `${API_BASE_URL}/Auth.php`,
+                {
+                    action: 'vk_register',
+                    vk_user_id: vkData.userId,
+                    access_token: vkData.accessToken,
+                    email: vkData.email,
+                    first_name: vkData.firstName,
+                    last_name: vkData.lastName,
+                    photo: vkData.photo
+                },
+                {
+                    withCredentials: true,
+                    headers: { 'Content-Type': 'application/json' }
+                }
+            );
+
+            if (response.data.success) {
+                setUser(response.data.user);
+                setIsAuthenticated(true);
+                return { success: true, user: response.data.user };
+            } else {
+                return { success: false, message: response.data.message };
+            }
+        } catch (err) {
+            return {
+                success: false,
+                message: err.response?.data?.message || 'VK registration failed'
+            };
+        }
+    };
+
+    const getVKAuth = () => {
+        if (!VK_APP_ID) {
+            console.warn('VK_APP_ID is not configured');
+            return null;
+        }
+        return initVKAuth(VK_APP_ID, VK_REDIRECT_URL);
+    };
+
     const value = {
         user,
         isAuthenticated,
@@ -122,7 +199,10 @@ export const AuthProvider = ({ children }) => {
         register,
         login,
         logout,
-        checkAuth
+        checkAuth,
+        loginWithVK,
+        registerWithVK,
+        getVKAuth
     };
 
     return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;
