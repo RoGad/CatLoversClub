@@ -35,7 +35,7 @@ const Header = () => {
                     <Link to="/WikiCats">Список пород</Link>
                     <Link to="/">Главная</Link>
                     <Link to="/">Наши кошки</Link>
-                    <Link to="/ProfilePage">Профиль (тест)</Link>
+                    <Link to="/ProfilePage">Профиль</Link>
                 </nav>
                 <div className="auth-buttons">
                     <Link to="/Login" className="login-btn">Log In</Link>
