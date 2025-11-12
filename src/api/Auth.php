@@ -121,6 +121,93 @@ try {
             ]);
             break;
 
+        case 'vk_login':
+        case 'vk_register':
+            // VK авторизация/регистрация
+            $vk_user_id = isset($input['vk_user_id']) ? trim($input['vk_user_id']) : '';
+            $access_token = isset($input['access_token']) ? trim($input['access_token']) : '';
+            $email = isset($input['email']) ? trim($input['email']) : '';
+            $first_name = isset($input['first_name']) ? trim($input['first_name']) : '';
+            $last_name = isset($input['last_name']) ? trim($input['last_name']) : '';
+            $photo = isset($input['photo']) ? trim($input['photo']) : '';
+
+            if (empty($vk_user_id) || empty($access_token)) {
+                echo json_encode(['success' => false, 'message' => 'VK user ID and access token are required']);
+                exit;
+            }
+
+            // Проверяем, существует ли пользователь с таким VK ID
+            $stmt = $pdo->prepare("SELECT user_id, username, email, password_hash, full_name, profile_image_url FROM users WHERE vk_user_id = ?");
+            $stmt->execute([$vk_user_id]);
+            $user = $stmt->fetch();
+
+            if ($user) {
+                // Пользователь существует - вход
+                $_SESSION['user_id'] = $user['user_id'];
+                $_SESSION['username'] = $user['username'];
+                $_SESSION['authenticated'] = true;
+
+                echo json_encode([
+                    'success' => true,
+                    'message' => 'VK login successful',
+                    'user' => [
+                        'user_id' => $user['user_id'],
+                        'username' => $user['username'],
+                        'email' => $user['email'],
+                        'full_name' => $user['full_name'],
+                        'profile_image_url' => $user['profile_image_url']
+                    ]
+                ]);
+            } else {
+                // Пользователь не существует - регистрация
+                $username = !empty($email) ? explode('@', $email)[0] : 'vk_user_' . $vk_user_id;
+                $full_name = trim($first_name . ' ' . $last_name);
+                
+                // Проверяем, не занят ли username
+                $stmt = $pdo->prepare("SELECT user_id FROM users WHERE username = ?");
+                $stmt->execute([$username]);
+                $existing = $stmt->fetch();
+                
+                if ($existing) {
+                    $username = 'vk_user_' . $vk_user_id . '_' . time();
+                }
+
+                // Проверяем, не занят ли email (если он есть)
+                if (!empty($email)) {
+                    $stmt = $pdo->prepare("SELECT user_id FROM users WHERE email = ?");
+                    $stmt->execute([$email]);
+                    $existing = $stmt->fetch();
+                    
+                    if ($existing) {
+                        echo json_encode(['success' => false, 'message' => 'Email already registered']);
+                        exit;
+                    }
+                }
+
+                // Создаем пользователя без пароля (VK авторизация)
+                $stmt = $pdo->prepare("INSERT INTO users (username, email, password_hash, full_name, vk_user_id, profile_image_url, registration_date) VALUES (?, ?, NULL, ?, ?, ?, CURRENT_TIMESTAMP)");
+                $stmt->execute([$username, $email ?: null, $full_name ?: null, $vk_user_id, $photo ?: null]);
+                $user_id = $pdo->lastInsertId();
+
+                // Устанавливаем сессию
+                $_SESSION['user_id'] = $user_id;
+                $_SESSION['username'] = $username;
+                $_SESSION['authenticated'] = true;
+
+                echo json_encode([
+                    'success' => true,
+                    'message' => 'VK registration successful',
+                    'user' => [
+                        'user_id' => $user_id,
+                        'username' => $username,
+                        'email' => $email,
+                        'full_name' => $full_name,
+                        'profile_image_url' => $photo
+                    ]
+                ]);
+            }
+            break;
+
         case 'logout':
             // Logout
             session_destroy();

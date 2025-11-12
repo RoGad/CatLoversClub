@@ -12,6 +12,12 @@ dist
 dist-ssr
 *.local
 
+# config files
+config.js
+config.php
+vercel.json
+vkAuth.js
+
 # Editor directories and files
 .vscode/*
 !.vscode/extensions.json
