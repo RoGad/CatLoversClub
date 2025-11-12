@@ -2,7 +2,7 @@ import "./AuthStyles.css";
 import React, { useState, useEffect, useRef } from "react";
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "../global/AuthContext.jsx";
-import { initVKAuth } from "./vkAuth.js";
+import { initVKAuth } from "../auth/vkAuth.js";
 import { VK_APP_ID, VK_REDIRECT_URL } from "../global/config.js";
 
 const LogIn = () => {
