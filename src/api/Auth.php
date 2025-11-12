@@ -161,7 +161,18 @@ try {
             } else {
                 // Пользователь не существует - регистрация
                 $username = !empty($email) ? explode('@', $email)[0] : 'vk_user_' . $vk_user_id;
+                
+                // Формируем full_name из имени и фамилии
                 $full_name = trim($first_name . ' ' . $last_name);
+                // Если full_name пустой, используем username (требуется NOT NULL)
+                if (empty($full_name)) {
+                    $full_name = $username;
+                }
+                
+                // Генерируем email, если он не предоставлен (требуется NOT NULL)
+                if (empty($email)) {
+                    $email = 'vk_' . $vk_user_id . '@vk.temp';
+                }
                 
                 // Проверяем, не занят ли username
                 $stmt = $pdo->prepare("SELECT user_id FROM users WHERE username = ?");
@@ -172,21 +183,23 @@ try {
                     $username = 'vk_user_' . $vk_user_id . '_' . time();
                 }
 
-                // Проверяем, не занят ли email (если он есть)
-                if (!empty($email)) {
-                    $stmt = $pdo->prepare("SELECT user_id FROM users WHERE email = ?");
-                    $stmt->execute([$email]);
-                    $existing = $stmt->fetch();
-                    
-                    if ($existing) {
-                        echo json_encode(['success' => false, 'message' => 'Email already registered']);
-                        exit;
-                    }
+                // Проверяем, не занят ли email
+                $stmt = $pdo->prepare("SELECT user_id FROM users WHERE email = ?");
+                $stmt->execute([$email]);
+                $existing = $stmt->fetch();
+                
+                if ($existing) {
+                    // Если email занят, генерируем уникальный
+                    $email = 'vk_' . $vk_user_id . '_' . time() . '@vk.temp';
                 }
 
                 // Создаем пользователя без пароля (VK авторизация)
-                $stmt = $pdo->prepare("INSERT INTO users (username, email, password_hash, full_name, vk_user_id, profile_image_url, registration_date) VALUES (?, ?, NULL, ?, ?, ?, CURRENT_TIMESTAMP)");
-                $stmt->execute([$username, $email ?: null, $full_name ?: null, $vk_user_id, $photo ?: null]);
+                // Генерируем случайный хеш, который никогда не будет использоваться для входа
+                // VK пользователи входят только через VK авторизацию
+                $vk_password_hash = password_hash(uniqid('vk_', true) . $vk_user_id . time(), PASSWORD_DEFAULT);
+                
+                $stmt = $pdo->prepare("INSERT INTO users (username, email, password_hash, full_name, vk_user_id, profile_image_url, registration_date) VALUES (?, ?, ?, ?, ?, ?, CURRENT_TIMESTAMP)");
+                $stmt->execute([$username, $email, $vk_password_hash, $full_name, $vk_user_id, $photo ?: null]);
                 $user_id = $pdo->lastInsertId();
 
                 // Устанавливаем сессию

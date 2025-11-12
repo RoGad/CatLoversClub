@@ -7,7 +7,7 @@ export default defineConfig({
   server: {
     proxy: {
       '/api': {
-        target: 'http://localhost',
+        target: 'https://localhost',
         changeOrigin: true,
         rewrite: (path) => {
           // Преобразуем /api/admin-auth.php в /cat-club/src/api/admin-auth.php
